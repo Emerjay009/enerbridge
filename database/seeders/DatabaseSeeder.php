@@ -10,6 +10,8 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call(RoleSeeder::class);
+
         foreach (['Classroom 1', 'Classroom 2', 'Classroom 3'] as $name) {
             $room = Room::firstOrCreate(['name' => $name]);
 

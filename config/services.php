@@ -34,5 +34,6 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
-
+    'enerbridge_key' => env('ENERBRIDGE_API_KEY'),
+    'enerbridge_admin_code' => env('ENERBRIDGE_ADMIN_CODE'),
 ];
