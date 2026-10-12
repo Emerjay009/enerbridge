@@ -2,13 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\Room;
+use App\Models\User;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        return view('dashboard');
+        $isAdmin = Role::find(auth()->user()->role_id)?->slug === 'administrator';
+
+        $pendingCount = 0;
+        $hasOverdue = false;
+
+        if ($isAdmin) {
+            $pending = User::where('approval_status', 'pending');
+            $pendingCount = (clone $pending)->count();
+            $hasOverdue = (clone $pending)
+                ->where('created_at', '<', now()->subHours(ApprovalController::TARGET_HOURS))
+                ->exists();
+        }
+
+        return view('dashboard', compact('isAdmin', 'pendingCount', 'hasOverdue'));
     }
 
     public function data()
@@ -23,7 +38,6 @@ class DashboardController extends Controller
                 'occupied' => $l?->occupied ?? false,
                 'door_open' => $l?->door_open ?? false,
                 'light_on' => $l?->light_on ?? false,
-                'fan_on' => $l?->fan_on ?? false,
                 'voltage' => $l?->voltage ?? 0,
                 'current_ma' => $l?->current_ma ?? 0,
                 'power_mw' => $l?->power_mw ?? 0,

@@ -36,4 +36,10 @@ return [
     ],
     'enerbridge_key' => env('ENERBRIDGE_API_KEY'),
     'enerbridge_admin_code' => env('ENERBRIDGE_ADMIN_CODE'),
+    #telegram notifier
+    'telegram' => [
+    'token' => env('TELEGRAM_BOT_TOKEN'),
+    'chat_id' => env('TELEGRAM_CHAT_ID'),
+    'username' => env('TELEGRAM_BOT_USERNAME'),
+    ],
 ];

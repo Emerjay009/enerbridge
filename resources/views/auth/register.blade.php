@@ -62,6 +62,10 @@
     <label for="employee_id">Employee ID</label>
     <input type="text" id="employee_id" name="employee_id" value="{{ old('employee_id') }}" required>
 
+    <label for="phone_number">Mobile number (Philippines)</label>
+    <input type="text" id="phone_number" name="phone_number" value="{{ old('phone_number') }}" required inputmode="tel" placeholder="0917 123 4567" autocomplete="tel">
+    <div class="hint">Format: 09XX XXX XXXX or +63 9XX XXX XXXX</div>
+
     <div id="dept-field">
       <label for="department">Department / College</label>
       <input type="text" id="department" name="department" value="{{ old('department') }}">

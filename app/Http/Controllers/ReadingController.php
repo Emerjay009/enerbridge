@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SensorReading;
+use App\Services\AlertService;
 use Illuminate\Http\Request;
 
 class ReadingController extends Controller
@@ -18,7 +19,6 @@ class ReadingController extends Controller
             'occupied' => 'required|boolean',
             'door_open' => 'required|boolean',
             'light_on' => 'required|boolean',
-            'fan_on' => 'required|boolean',
             'voltage' => 'required|numeric',
             'current_ma' => 'required|numeric',
         ]);
@@ -26,6 +26,9 @@ class ReadingController extends Controller
         $data['power_mw'] = $data['voltage'] * $data['current_ma']; // V x mA = mW
 
         $reading = SensorReading::create($data);
+
+        // Raise an alert (email + Telegram) if a load is on outside the room's schedule
+        app(AlertService::class)->check($reading);
 
         return response()->json(['ok' => true, 'id' => $reading->id], 201);
     }

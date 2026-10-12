@@ -16,6 +16,7 @@
   .err { background:#7f1d1d; color:#fecaca; padding:8px 12px; border-radius:8px; margin-bottom:12px; font-size:14px; }
   .err div { margin:2px 0; }
   .foot { margin-top:16px; text-align:center; font-size:14px; color:#94a3b8; } a { color:#38bdf8; }
+  .note { margin-top:16px; text-align:center; font-size:12px; line-height:1.5; color:#94a3b8; }
   .seg { display:flex; gap:8px; margin-top:4px; }
   .seg input { display:none; }
   .seg label { flex:1; text-align:center; padding:10px 6px; border:1px solid #334155; border-radius:8px; cursor:pointer; margin:0; font-size:14px; }
@@ -59,6 +60,7 @@
   </form>
 
   <div class="foot">No account yet? <a href="/register">Sign up</a></div>
+  <div class="note">This is a Capstone project of Mr. Emerjay A. Jumamil &amp; Mr. Prince Calindatas of Bachelor of Science in Information Technology. <br> All Rights Reserved, 2026.</div>
 </div>
 
 @include('auth._popup', ['popupTitle' => 'Login failed'])
