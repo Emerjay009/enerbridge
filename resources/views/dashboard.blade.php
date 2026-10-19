@@ -49,7 +49,7 @@
       </a>
     @endif
     <div class="account-actions">
-      <a href="/profile" class="profile-link">{{ collect([auth()->user()->first_name, auth()->user()->middle_name, auth()->user()->last_name])->filter()->implode(' ') }}</a>
+      <a href="/profile" class="profile-link">{{ auth()->user()->first_name }} - {{ $isAdmin ? 'Admin' : 'Teacher' }}</a>
       <form method="POST" action="/logout" style="display:inline">@csrf<button type="submit">Log out</button></form>
     </div>
   </div>
