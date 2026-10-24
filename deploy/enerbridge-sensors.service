@@ -1,0 +1,16 @@
+[Unit]
+Description=EnerBridge sensors and relays (Laravel)
+After=network-online.target mariadb.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Replace YOUR_USER with your Raspberry Pi username (for example emerjayjumamil)
+User=YOUR_USER
+WorkingDirectory=/home/YOUR_USER/enerbridge
+ExecStart=/usr/bin/php artisan enerbridge:sensors
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
