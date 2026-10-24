@@ -4,34 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>EnerBridge | Account approvals</title>
-<style>
-  body { font-family: Arial, sans-serif; background:#0f172a; color:#e2e8f0; margin:0; padding:24px; }
-  .wrap { max-width:1000px; margin:0 auto; }
-  .top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px; }
-  h1 { margin:0; font-size:26px; } .sub { color:#94a3b8; margin-bottom:16px; font-size:14px; }
-  a { color:#38bdf8; text-decoration:none; } a:hover { text-decoration:underline; }
-  .tabs { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
-  .tabs a { padding:8px 16px; border-radius:999px; background:#1e293b; color:#e2e8f0; font-size:14px; }
-  .tabs a.active { background:#0284c7; font-weight:bold; }
-  .flash { background:#14532d; color:#bbf7d0; padding:10px 14px; border-radius:8px; margin-bottom:16px; font-size:14px; }
-  .card { background:#1e293b; border-radius:12px; padding:8px 16px; overflow-x:auto; }
-  table { width:100%; border-collapse:collapse; font-size:14px; }
-  th { text-align:left; color:#94a3b8; font-weight:normal; padding:10px 8px; border-bottom:1px solid #334155; }
-  td { padding:10px 8px; border-bottom:1px solid #334155; vertical-align:middle; }
-  tr:last-child td { border-bottom:0; }
-  .badge { padding:2px 10px; border-radius:999px; font-size:12px; font-weight:bold; white-space:nowrap; }
-  .ok { background:#16a34a; } .late { background:#dc2626; } .wait { background:#d97706; }
-  .actions { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
-  button { border:0; border-radius:8px; padding:6px 12px; cursor:pointer; font-size:13px; color:#fff; }
-  .approve { background:#16a34a; } .approve:hover { background:#15803d; }
-  .reject { background:#dc2626; } .reject:hover { background:#b91c1c; }
-  .logout { background:#334155; color:#e2e8f0; }
-  input[type=text] { padding:6px 8px; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#e2e8f0; font-size:13px; width:150px; }
-  .empty { padding:24px; text-align:center; color:#94a3b8; }
-  .muted { color:#94a3b8; font-size:12px; }
-</style>
+<link rel="stylesheet" href="{{ asset('css/enerbridge.css') }}?v={{ @filemtime(public_path('css/enerbridge.css')) }}">
 </head>
-<body>
+<body class="app page-approvals">
 <div class="wrap">
   <div class="top">
     <h1>Account approvals</h1>

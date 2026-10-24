@@ -4,26 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>EnerBridge | Edit class</title>
-<style>
-  * { box-sizing:border-box; }
-  body { font-family: Arial, sans-serif; background:#0f172a; color:#e2e8f0; margin:0; padding:24px; }
-  .wrap { max-width:560px; margin:0 auto; }
-  a { color:#38bdf8; text-decoration:none; } a:hover { text-decoration:underline; }
-  h1 { margin:0 0 6px; font-size:26px; } .sub { color:#94a3b8; font-size:14px; margin-bottom:16px; }
-  .card { background:#1e293b; border-radius:12px; padding:22px; }
-  label.l { display:block; font-size:14px; margin:14px 0 6px; font-weight:bold; }
-  input[type=text], input[type=time], select { width:100%; padding:10px; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#e2e8f0; font-size:15px; }
-  input:focus, select:focus { outline:2px solid #0284c7; border-color:#0284c7; }
-  .row2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-  .btn { padding:12px 22px; border:0; border-radius:10px; background:#0284c7; color:#fff; font-size:16px; font-weight:bold; cursor:pointer; }
-  .btn:hover { background:#0369a1; }
-  .bar { display:flex; justify-content:space-between; align-items:center; margin-top:22px; gap:12px; flex-wrap:wrap; }
-  .linkbtn { background:none; border:0; color:#f87171; cursor:pointer; font-size:14px; padding:0; }
-  .linkbtn:hover { text-decoration:underline; }
-  .muted { color:#94a3b8; font-size:13px; }
-</style>
+<link rel="stylesheet" href="{{ asset('css/enerbridge.css') }}?v={{ @filemtime(public_path('css/enerbridge.css')) }}">
 </head>
-<body>
+<body class="app page-schedule-edit">
 <div class="wrap">
   <h1>Edit class</h1>
   <div class="sub"><a href="/schedules?room={{ $schedule->room_id }}">&larr; Back to schedules</a></div>

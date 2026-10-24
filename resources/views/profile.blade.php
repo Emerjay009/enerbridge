@@ -4,42 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>EnerBridge | My profile</title>
-<style>
-  body { font-family: Arial, sans-serif; background:#0f172a; color:#e2e8f0; margin:0; padding:24px; }
-  .wrap { max-width:760px; margin:0 auto; }
-  .top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
-  h1 { margin:0; font-size:26px; }
-  a { color:#38bdf8; text-decoration:none; } a:hover { text-decoration:underline; }
-  .card { background:#1e293b; border-radius:12px; padding:20px; margin-bottom:16px; }
-  .who { display:flex; align-items:center; gap:16px; }
-  .avatar { width:64px; height:64px; border-radius:50%; background:#0284c7; display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:bold; flex-shrink:0; }
-  .name { font-size:20px; font-weight:bold; } .muted { color:#94a3b8; font-size:14px; }
-  .badge { display:inline-block; padding:3px 12px; border-radius:999px; font-size:13px; font-weight:bold; margin-top:6px; }
-  .role-administrator { background:#7c3aed; } .role-teacher { background:#0d9488; }
-  h2 { margin:0 0 10px; font-size:18px; }
-  ul { list-style:none; margin:0; padding:0; }
-  li { display:flex; gap:10px; padding:8px 0; border-bottom:1px solid #334155; font-size:15px; }
-  li:last-child { border-bottom:0; }
-  .yes { color:#4ade80; font-weight:bold; } .no { color:#f87171; font-weight:bold; }
-  .info { display:grid; grid-template-columns:140px 1fr; gap:6px 12px; margin-top:16px; font-size:15px; }
-  .info div:nth-child(odd) { color:#94a3b8; }
-  button { background:#334155; color:#e2e8f0; border:0; border-radius:8px; padding:8px 14px; cursor:pointer; font-size:14px; }
-  button:hover { background:#475569; }
-  .note { font-size:13px; color:#94a3b8; }
-  .field { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
-  input[type=text], input[type=email] { padding:9px; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#e2e8f0; font-size:15px; flex:1; min-width:180px; }
-  .edit-profile .field { flex-direction:column; align-items:stretch; }
-  .edit-profile .field button { align-self:flex-start; }
-  .btn { display:inline-block; background:#0284c7; color:#fff; border-radius:8px; padding:9px 16px; font-size:14px; font-weight:bold; text-decoration:none; border:0; cursor:pointer; }
-  .btn:hover { background:#0369a1; text-decoration:none; }
-  .flash { background:#14532d; color:#bbf7d0; padding:10px 14px; border-radius:8px; margin-bottom:16px; font-size:14px; }
-  .hint { font-size:13px; color:#94a3b8; margin-top:6px; }
-  .ok { color:#4ade80; font-weight:bold; }
-  .edit-profile summary { display:inline-block; list-style:none; background:#0284c7; color:#fff; border-radius:8px; padding:9px 16px; font-size:14px; font-weight:bold; cursor:pointer; }
-  .edit-profile summary::-webkit-details-marker { display:none; }
-</style>
+<link rel="stylesheet" href="{{ asset('css/enerbridge.css') }}?v={{ @filemtime(public_path('css/enerbridge.css')) }}">
 </head>
-<body>
+<body class="app page-profile">
 <div class="wrap">
   <div class="top">
     <h1>My profile</h1>

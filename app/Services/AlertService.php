@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Alert;
-use App\Models\RoomSchedule;
 use App\Models\SensorReading;
 
 class AlertService
@@ -16,7 +15,8 @@ class AlertService
         $room = $reading->room;
         $at = $reading->created_at ?? now();
 
-        $withinSchedule = $this->withinSchedule($reading->room_id, $at);
+        // Authorized = a class is scheduled in this room now (plus a few minutes before and after)
+        $withinSchedule = app(ScheduleService::class)->isAuthorized($reading->room_id, $at);
         $loadOn = $reading->light_on || $reading->power_mw >= self::MIN_POWER_MW;
 
         $open = Alert::where('room_id', $reading->room_id)
@@ -26,7 +26,7 @@ class AlertService
 
         if (! $withinSchedule && $loadOn && ! $open) {
             $message = sprintf(
-                "%s: the load is ON outside the authorized schedule.\nTime: %s\nVoltage: %.2f V, current: %.1f mA, power: %.1f mW",
+                "%s: the load is ON while no class is scheduled.\nTime: %s\nVoltage: %.2f V, current: %.1f mA, power: %.1f mW",
                 $room->name,
                 $at->format('D, M j, Y g:i A'),
                 $reading->voltage,
@@ -41,29 +41,24 @@ class AlertService
                 'power_mw' => $reading->power_mw,
             ]);
 
-            // Send after the HTTP response, so the sensor script is not kept waiting.
-            defer(function () use ($alert, $room, $message) {
+            $send = function () use ($alert, $room, $message) {
                 $result = app(NotificationService::class)
                     ->notifyAdmins("EnerBridge alert: {$room->name}", $message);
 
                 if ($result['email'] === null) {
                     $alert->update(['emailed_at' => now()]);
                 }
-            });
+            };
+
+            // A web request sends after the response; the long-running sensor command sends at once.
+            if (app()->runningInConsole()) {
+                $send();
+            } else {
+                defer($send);
+            }
         } elseif (($withinSchedule || ! $loadOn) && $open) {
-            // The problem is over (load switched off, or the room's hours began): close the alert.
+            // The problem is over (load switched off, or a class started): close the alert.
             $open->update(['resolved_at' => now()]);
         }
-    }
-
-    private function withinSchedule(int $roomId, $at): bool
-    {
-        $time = $at->format('H:i:s');
-
-        return RoomSchedule::where('room_id', $roomId)
-            ->where('day_of_week', $at->dayOfWeek)   // 0 = Sunday ... 6 = Saturday
-            ->where('start_time', '<=', $time)
-            ->where('end_time', '>=', $time)
-            ->exists();
     }
 }

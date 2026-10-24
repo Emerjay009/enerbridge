@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room;
+use App\Services\ScheduleService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -182,19 +183,19 @@ class RoomController extends Controller
 
     private function scheduleRows(Room $room): array
     {
-        $schedules = $room->schedules()->get()->keyBy('day_of_week');
-        $names = [1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday', 6 => 'Saturday', 0 => 'Sunday'];
+        $slots = $room->classSchedules()->orderBy('start_time')->get()->groupBy('day_of_week');
         $rows = [];
 
-        foreach ($names as $dow => $name) {
-            $s = $schedules->get($dow);
+        foreach (ScheduleService::DAYS as $dow => $name) {
+            $day = $slots->get($dow, collect());
+
             $rows[] = [
                 'day' => $name,
                 'is_today' => now()->dayOfWeek === $dow,
-                'hours' => $s
-                    ? Carbon::parse($s->start_time)->format('g:i A').' to '.Carbon::parse($s->end_time)->format('g:i A')
-                    : 'No classes',
-                'has_class' => (bool) $s,
+                'hours' => $day->isEmpty()
+                    ? 'No classes'
+                    : $day->map(fn ($c) => ScheduleService::formatTime($c->start_time).' to '.ScheduleService::formatTime($c->end_time))->implode(', '),
+                'has_class' => $day->isNotEmpty(),
             ];
         }
 
@@ -203,12 +204,6 @@ class RoomController extends Controller
 
     private function withinScheduleNow(Room $room): bool
     {
-        $now = now();
-
-        return $room->schedules()
-            ->where('day_of_week', $now->dayOfWeek)
-            ->where('start_time', '<=', $now->format('H:i:s'))
-            ->where('end_time', '>=', $now->format('H:i:s'))
-            ->exists();
+        return app(ScheduleService::class)->isAuthorized($room->id, now());
     }
 }
