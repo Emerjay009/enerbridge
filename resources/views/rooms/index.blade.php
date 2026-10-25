@@ -9,7 +9,7 @@
 <body class="app page-rooms">
 <div class="wrap">
   <div class="top">
-    <h1>Classrooms</h1>
+    <div class="title"><a class="brand-mark" href="/" title="EnerBridge home"><img src="{{ asset('img/enerbridge-mark.png') }}" alt="EnerBridge" width="73" height="48"></a><h1>Classrooms</h1></div>
     <div><a href="/">&larr; Dashboard</a></div>
   </div>
   <div class="sub">Three simulated classrooms, each 12 &times; 6 inches. Open a classroom for its full details.</div>

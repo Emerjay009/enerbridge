@@ -9,7 +9,7 @@
 <body class="app page-approvals">
 <div class="wrap">
   <div class="top">
-    <h1>Account approvals</h1>
+    <div class="title"><a class="brand-mark" href="/" title="EnerBridge home"><img src="{{ asset('img/enerbridge-mark.png') }}" alt="EnerBridge" width="73" height="48"></a><h1>Account approvals</h1></div>
     <div><a href="/">&larr; Back to dashboard</a></div>
   </div>
   <div class="sub">Review Teacher / Professor sign-ups. Requests should be handled within {{ $targetHours }} hours; older ones show as Overdue.</div>

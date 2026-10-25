@@ -8,10 +8,14 @@
 <link rel="stylesheet" href="{{ asset('css/enerbridge.css') }}?v={{ @filemtime(public_path('css/enerbridge.css')) }}">
 </head>
 <body class="app page-dashboard">
+@include('partials.intro')
 <div class="top">
-  <div>
-    <h1>EnerBridge</h1>
-    <div class="sub">Classroom energy monitoring and occupancy-based load control (prototype)</div>
+  <div class="title">
+    <a class="brand-mark" href="/" title="EnerBridge home"><img src="{{ asset('img/enerbridge-mark.png') }}" alt="EnerBridge" width="73" height="48"></a>
+    <div>
+      <h1>EnerBridge</h1>
+      <div class="sub">Classroom energy monitoring and occupancy-based load control (prototype)<span class="live" title="Readings refresh automatically every 3 seconds"><i></i>Live</span></div>
+    </div>
   </div>
   <div class="who">
     <a href="/rooms" class="profile-link">Classrooms</a>
@@ -36,6 +40,7 @@
 <div class="chart"><canvas id="powerChart" height="110"></canvas></div>
 
 <script>
+const REDUCE = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 if (window.Chart) {
   Chart.defaults.font.family = "ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace";
   Chart.defaults.font.size = 11;
@@ -44,6 +49,7 @@ if (window.Chart) {
 }
 const colors = ['#ffde00', '#35d07a', '#ffffff'];
 let chart;
+let firstRender = true;   // entrance animation only on the first draw, not on every 3 s refresh
 
 function badge(on, yes, no) {
   return `<span class="badge ${on ? 'on' : 'off'}">${on ? yes : no}</span>`;
@@ -51,7 +57,7 @@ function badge(on, yes, no) {
 
 function render(rooms) {
   document.getElementById('rooms').innerHTML = rooms.map(r => `
-    <div class="card">
+    <div class="card${firstRender ? ' enter' : ''}">
       <h2><a href="/rooms/${r.id}" style="color:inherit;text-decoration:none">${r.name}</a></h2>
       <div class="row"><span>Occupancy</span>${badge(r.occupied, 'Occupied', 'Vacant')}</div>
       <div class="row"><span>Door</span>${badge(r.door_open, 'Open', 'Closed')}</div>
@@ -62,6 +68,7 @@ function render(rooms) {
       <small>Updated ${r.updated}</small>
       <div><a href="/rooms/${r.id}" class="details-link">View classroom details &rarr;</a></div>
     </div>`).join('');
+  firstRender = false;
 
   const labels = (rooms[0]?.history || []).map(h => h.t);
   const datasets = rooms.map((r, i) => ({
@@ -79,7 +86,7 @@ function render(rooms) {
       type: 'line',
       data: { labels, datasets },
       options: {
-        animation: false,
+        animation: REDUCE ? false : { duration: 800, easing: 'easeOutQuart' },
         plugins: { title: { display: true, text: 'Power consumption (mW)', color: '#ffffff' },
                    legend: { labels: { color: '#ffffff' } } },
         scales: { x: { ticks: { color: '#9bb5a4' } }, y: { ticks: { color: '#9bb5a4' } } },
@@ -88,7 +95,7 @@ function render(rooms) {
   } else {
     chart.data.labels = labels;
     chart.data.datasets = datasets;
-    chart.update();
+    chart.update('none');
   }
 }
 

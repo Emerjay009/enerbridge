@@ -8,7 +8,7 @@
 </head>
 <body class="app page-schedule-edit">
 <div class="wrap">
-  <h1>Edit class</h1>
+  <div class="title"><a class="brand-mark" href="/" title="EnerBridge home"><img src="{{ asset('img/enerbridge-mark.png') }}" alt="EnerBridge" width="73" height="48"></a><h1>Edit class</h1></div>
   <div class="sub"><a href="/schedules?room={{ $schedule->room_id }}">&larr; Back to schedules</a></div>
 
   <div class="card">

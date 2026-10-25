@@ -8,9 +8,10 @@
 <link rel="stylesheet" href="{{ asset('css/enerbridge.css') }}?v={{ @filemtime(public_path('css/enerbridge.css')) }}">
 </head>
 <body class="auth page-login">
+@include('partials.intro')
 <div class="box">
-  <h1>EnerBridge</h1>
-  <div class="sub">Log in to the classroom energy dashboard</div>
+  <h1 class="brand" data-tilt><img src="{{ asset('img/enerbridge-logo.png') }}" alt="EnerBridge" width="300" height="178"></h1>
+  <div class="sub">Welcome to EnerBridge!</div>
 
   @if ($errors->any())
     <div class="err">

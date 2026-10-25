@@ -9,7 +9,7 @@
 <body class="app page-profile">
 <div class="wrap">
   <div class="top">
-    <h1>My profile</h1>
+    <div class="title"><a class="brand-mark" href="/" title="EnerBridge home"><img src="{{ asset('img/enerbridge-mark.png') }}" alt="EnerBridge" width="73" height="48"></a><h1>My profile</h1></div>
     <div>
       <a href="/">&larr; Back to dashboard</a>
       <form method="POST" action="/logout" style="display:inline; margin-left:12px">@csrf<button type="submit">Log out</button></form>

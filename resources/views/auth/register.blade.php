@@ -8,7 +8,7 @@
 </head>
 <body class="auth page-register">
 <div class="box">
-  <h1>EnerBridge</h1>
+  <h1 class="brand" data-tilt><img src="{{ asset('img/enerbridge-logo.png') }}" alt="EnerBridge" width="300" height="178"></h1>
   <div class="sub">Create an account to use the classroom energy dashboard</div>
 
   @if ($errors->any())
@@ -84,5 +84,6 @@
 </script>
 
 @include('auth._popup', ['popupTitle' => 'Sign-up problem'])
+<script src="{{ asset('js/enerbridge.js') }}" defer></script>
 </body>
 </html>

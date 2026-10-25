@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room;
+use App\Services\AlertService;
 use App\Services\ScheduleService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -73,6 +74,8 @@ class RoomController extends Controller
             'occupied' => $l?->occupied ?? false,
             'door_open' => $l?->door_open ?? false,
             'light_on' => $l?->light_on ?? false,
+            // same rule the alert system uses: light on, or the room draws real power
+            'load_detected' => $l ? ($l->light_on || $l->power_mw >= AlertService::MIN_POWER_MW) : false,
             'voltage' => (float) ($l?->voltage ?? 0),
             'current_ma' => (float) ($l?->current_ma ?? 0),
             'power_mw' => (float) ($l?->power_mw ?? 0),
@@ -86,11 +89,13 @@ class RoomController extends Controller
     {
         $from = $this->startOfToday();
         $gap = (int) self::MAX_GAP_SECONDS;
+        $minPower = (int) AlertService::MIN_POWER_MW;
 
         $row = DB::selectOne("
             SELECT
                 COALESCE(SUM(power_mw * dt) / 3600 / 1000, 0) AS energy_wh,
                 COALESCE(SUM(CASE WHEN light_on = 1 THEN dt ELSE 0 END) / 60, 0) AS light_min,
+                COALESCE(SUM(CASE WHEN light_on = 1 OR power_mw >= {$minPower} THEN dt ELSE 0 END) / 60, 0) AS load_min,
                 COALESCE(SUM(CASE WHEN occupied = 1 THEN dt ELSE 0 END) / 60, 0) AS occupied_min
             FROM (
                 SELECT power_mw, light_on, occupied,
@@ -106,6 +111,7 @@ class RoomController extends Controller
         return [
             'energy_wh' => round((float) $row->energy_wh, 2),
             'light_min' => round((float) $row->light_min, 1),
+            'load_min' => round((float) $row->load_min, 1),
             'occupied_min' => round((float) $row->occupied_min, 1),
             'peak_mw' => round((float) (clone $today)->max('power_mw'), 1),
             'readings' => (clone $today)->count(),

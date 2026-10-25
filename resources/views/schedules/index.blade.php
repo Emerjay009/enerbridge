@@ -13,7 +13,7 @@
 @endphp
 <div class="wrap">
   <div class="top">
-    <h1>Class schedules</h1>
+    <div class="title"><a class="brand-mark" href="/" title="EnerBridge home"><img src="{{ asset('img/enerbridge-mark.png') }}" alt="EnerBridge" width="73" height="48"></a><h1>Class schedules</h1></div>
     <div><a href="/">&larr; Dashboard</a> &nbsp;&middot;&nbsp; <a href="/rooms">Rooms</a></div>
   </div>
   <div class="sub">

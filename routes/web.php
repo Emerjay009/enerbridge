@@ -20,11 +20,13 @@ Route::middleware('guest')->group(function () {
     Route::view('/pending', 'auth.pending');
 });
 
+Route::get('/', fn () => auth()->check() ? redirect()->route('dashboard') : view('intro'))->name('home');
+
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');
 
 // Pages for approved accounts only
 Route::middleware(['auth', EnsureApproved::class])->group(function () {
-    Route::get('/', [DashboardController::class, 'index']);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/data', [DashboardController::class, 'data']);
     Route::get('/rooms', [RoomController::class, 'index']);
     Route::get('/rooms/{room}', [RoomController::class, 'show']);

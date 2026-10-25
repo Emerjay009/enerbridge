@@ -18,10 +18,10 @@
 @endphp
 <div class="wrap">
   <div class="top">
-    <h1>{{ $room->name }}</h1>
+    <div class="title"><a class="brand-mark" href="/" title="EnerBridge home"><img src="{{ asset('img/enerbridge-mark.png') }}" alt="EnerBridge" width="73" height="48"></a><h1>{{ $room->name }}</h1></div>
     <div><a href="/">&larr; Dashboard</a></div>
   </div>
-  <div class="sub">{{ $room->description }}</div>
+  <div class="sub">{{ $room->description }}<span class="live" title="Readings refresh automatically every 3 seconds"><i></i>Live</span></div>
 
   <div class="tabs">
     @foreach ($rooms as $r)
@@ -144,10 +144,24 @@ const fmtMin = m => m >= 60 ? Math.floor(m / 60) + ' h ' + Math.round(m % 60) + 
 
 function setBadge(id, cls, text) {
   const el = document.getElementById(id);
+  const changed = el.textContent !== text;
   el.className = 'badge ' + cls;
   el.textContent = text;
+  if (changed && !REDUCE) { void el.offsetWidth; el.classList.add('pop'); }
 }
 
+// numbers flash gold briefly when a live value actually changes
+function setVal(id, text) {
+  const el = document.getElementById(id);
+  if (el.textContent === text) return;
+  el.textContent = text;
+  if (REDUCE) return;
+  el.classList.remove('pulse-update');
+  void el.offsetWidth;
+  el.classList.add('pulse-update');
+}
+
+const REDUCE = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 if (window.Chart) {
   Chart.defaults.font.family = "ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace";
   Chart.defaults.font.size = 11;
@@ -162,7 +176,7 @@ const powerChart = new Chart(document.getElementById('powerChart'), {
     datasets: [{ label: 'Power (mW)', data: @json($history->pluck('p')), borderColor: '#35d07a', backgroundColor: 'rgba(0, 145, 61, 0.18)', fill: true, borderWidth: 2, tension: 0.3, pointRadius: 0 }],
   },
   options: {
-    animation: false,
+    animation: REDUCE ? false : { duration: 800, easing: 'easeOutQuart' },
     plugins: { legend: { labels: { color: '#ffffff' } } },
     scales: { x: { ticks: { color: '#9bb5a4', maxTicksLimit: 6 } }, y: { ticks: { color: '#9bb5a4' }, beginAtZero: true } },
   },
@@ -175,7 +189,7 @@ new Chart(document.getElementById('dailyChart'), {
     datasets: [{ label: 'Energy (Wh)', data: @json(collect($daily)->pluck('wh')), backgroundColor: '#ffde00', borderRadius: 3 }],
   },
   options: {
-    animation: false,
+    animation: REDUCE ? false : { duration: 800, easing: 'easeOutQuart' },
     plugins: { legend: { labels: { color: '#ffffff' } } },
     scales: { x: { ticks: { color: '#9bb5a4' } }, y: { ticks: { color: '#9bb5a4' }, beginAtZero: true } },
   },
@@ -194,22 +208,22 @@ async function refresh() {
     setBadge('st-load', s.load_detected ? 'on' : 'off', s.load_detected ? 'Detected' : 'Stable');
     setBadge('st-schedule', d.in_schedule ? 'on' : 'off', d.in_schedule ? 'Yes' : 'No');
 
-    document.getElementById('v-voltage').textContent = s.voltage.toFixed(2) + ' V';
-    document.getElementById('v-current').textContent = s.current_ma.toFixed(1) + ' mA';
-    document.getElementById('v-power').textContent = s.power_mw.toFixed(1) + ' mW';
+    setVal('v-voltage', s.voltage.toFixed(2) + ' V');
+    setVal('v-current', s.current_ma.toFixed(1) + ' mA');
+    setVal('v-power', s.power_mw.toFixed(1) + ' mW');
     document.getElementById('v-updated').textContent = s.updated;
 
-    document.getElementById('m-energy').textContent = m.energy_wh.toFixed(2) + ' Wh';
-    document.getElementById('m-peak').textContent = m.peak_mw.toFixed(1) + ' mW';
-    document.getElementById('m-load').textContent = fmtMin(m.load_min);
-    document.getElementById('m-occupied').textContent = fmtMin(m.occupied_min);
-    document.getElementById('m-readings').textContent = m.readings.toLocaleString();
+    setVal('m-energy', m.energy_wh.toFixed(2) + ' Wh');
+    setVal('m-peak', m.peak_mw.toFixed(1) + ' mW');
+    setVal('m-load', fmtMin(m.load_min));
+    setVal('m-occupied', fmtMin(m.occupied_min));
+    setVal('m-readings', m.readings.toLocaleString());
 
     document.getElementById('alert-banner').style.display = d.open_alert ? '' : 'none';
 
     powerChart.data.labels = d.history.map(h => h.t);
     powerChart.data.datasets[0].data = d.history.map(h => h.p);
-    powerChart.update();
+    powerChart.update('none');
   } catch (e) { console.error(e); }
 }
 setInterval(refresh, 3000);

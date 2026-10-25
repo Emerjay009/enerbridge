@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Models\Room;
 use App\Models\User;
+use App\Services\AlertService;
 
 class DashboardController extends Controller
 {
@@ -38,6 +39,7 @@ class DashboardController extends Controller
                 'occupied' => $l?->occupied ?? false,
                 'door_open' => $l?->door_open ?? false,
                 'light_on' => $l?->light_on ?? false,
+                'load_detected' => $l ? ($l->light_on || $l->power_mw >= AlertService::MIN_POWER_MW) : false,
                 'voltage' => $l?->voltage ?? 0,
                 'current_ma' => $l?->current_ma ?? 0,
                 'power_mw' => $l?->power_mw ?? 0,

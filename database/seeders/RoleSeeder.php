@@ -32,13 +32,14 @@ class RoleSeeder extends Seeder
             'label' => 'Teacher / Professor',
             'description' => 'Monitors the classrooms. This is the account type for faculty.',
             'privileges' => [
+                'Create and edit the authorized schedule of your own classroom/s',
                 'View the live status of all three classrooms (occupancy, door, lighting)',
                 'View voltage, current, power and energy readings of every room',
                 'View the power consumption history chart',
                 'View the authorized schedule of each room (read-only)',
             ],
             'limitations' => [
-                'Cannot edit room schedules',
+                'Cannot edit other professors / teachers\' room schedules',
                 'Cannot view or resolve system alerts',
                 'Cannot manage user accounts or assign roles',
                 'Cannot switch the lights manually; control is automatic',
